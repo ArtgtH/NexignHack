@@ -1,0 +1,58 @@
+info:
+  contact: {}
+paths:
+  /fulltask:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Uploads a file and processes it for a full task
+      parameters:
+      - description: File to upload
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - plain/text
+      responses:
+        "200":
+          description: File uploaded successfully
+          schema:
+            type: string
+        "400":
+          description: Error retrieving the file
+          schema:
+            type: string
+        "500":
+          description: Error opening or reading the file
+          schema:
+            type: string
+      summary: Upload a file for a full task
+  /shorttask:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Uploads a file and processes it for a short task
+      parameters:
+      - description: File to upload
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - plain/text
+      responses:
+        "200":
+          description: File uploaded successfully
+          schema:
+            type: string
+        "400":
+          description: Error retrieving the file
+          schema:
+            type: string
+        "500":
+          description: Error opening or reading the file
+          schema:
+            type: string
+      summary: Upload a file for a short task
+swagger: "2.0"

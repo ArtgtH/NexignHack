@@ -1,0 +1,48 @@
+version: "3.8"
+
+networks:
+  dev:
+
+services:
+  py-web:
+    build: ./frontend
+    container_name: py-web
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    environment:
+      BACKEND_URL: "http://go-api:3000/api/binary/short/"
+    depends_on:
+      - go-api
+    networks:
+      - dev
+
+  go-api:
+    build: ./backend
+    container_name: go-api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+    depends_on:
+      - rabbitmq
+    networks:
+      - dev
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      dev:
+
+volumes:
+  rabbitmq_data:
