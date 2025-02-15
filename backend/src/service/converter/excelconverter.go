@@ -1,6 +1,7 @@
 package converter
 
 import (
+	"backend/src/service/structs"
 	"fmt"
 	"github.com/xuri/excelize/v2"
 	"io"
@@ -9,13 +10,7 @@ import (
 	"regexp"
 )
 
-type Message struct {
-	UserID      string `json:"userID"`
-	SubmitDate  string `json:"submitDate"`
-	MessageText string `json:"messageText"`
-}
-
-func ConvertFromXLSX(file multipart.File) ([]Message, error) {
+func ConvertFromXLSX(file multipart.File) ([]structs.Message, error) {
 	tempFile, err := os.CreateTemp("", "upload-*.xlsx")
 	if err != nil {
 		return nil, fmt.Errorf("error creating temp file: %v", err)
@@ -41,14 +36,18 @@ func ConvertFromXLSX(file multipart.File) ([]Message, error) {
 	}
 
 	pattern, _ := regexp.Compile(`<[^>]*>`)
-	result := make([]Message, len(rows))
+	result := make([]structs.Message, len(rows)-1)
 	for idx, row := range rows[1:] {
-		mes := Message{
-			UserID:      row[0],
-			SubmitDate:  row[1],
-			MessageText: DropHTML(row[2], pattern),
+		if row[0] != "" {
+			mes := structs.Message{
+				UserID:      row[0],
+				SubmitDate:  row[1],
+				MessageText: DropHTML(row[2], pattern),
+			}
+			result[idx] = mes
+		} else {
+			break
 		}
-		result[idx] = mes
 	}
 
 	return result, nil

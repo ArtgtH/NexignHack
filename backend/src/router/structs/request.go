@@ -1,13 +1,31 @@
 package structs
 
-import "backend/src/service/converter"
+import (
+	"backend/src/service/structs"
+	"github.com/google/uuid"
+)
 
 type JSONTaskRequest struct {
 	Data interface{} `json:"data" required:"true"`
 }
 
-type CreatedTask struct {
-	ID       uint                `json:"id"`
-	Type     string              `json:"type"`
-	Messages []converter.Message `json:"messages"`
+type CreatedFullTask struct {
+	ID       uuid.UUID         `json:"id"`
+	Type     string            `json:"type"`
+	Messages []structs.Message `json:"messages"`
+}
+
+type ResultTask struct {
+	ID       uuid.UUID               `json:"id"`
+	Type     string                  `json:"type"`
+	Messages []structs.MessageResult `json:"messages"`
+}
+
+type TextTaskRequest struct {
+	Text string `json:"text"`
+}
+
+type TextTaskResponse struct {
+	Text   string `json:"text"`
+	Result int    `json:"result"`
 }

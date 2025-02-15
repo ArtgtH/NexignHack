@@ -2,9 +2,22 @@ package mq
 
 import (
 	"backend/src/config"
+	"github.com/go-redis/redis/v8"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/streadway/amqp"
 )
+
+func RedisClient() *redis.Client {
+	url := config.Config("REDIS_URL")
+	opt, err := redis.ParseURL(url)
+	if err != nil {
+		panic(err)
+	}
+
+	rdb := redis.NewClient(opt)
+
+	return rdb
+}
 
 func CreateConnection() *amqp.Connection {
 	url := config.Config("RABBITMQ_URL")
@@ -24,23 +37,9 @@ func CreateChannel(connection *amqp.Connection) *amqp.Channel {
 }
 
 func CreateTaskQueue(ch *amqp.Channel) *amqp.Queue {
+	taskQueue := config.Config("RABBITMQ_TASK_QUEUE")
 	q, err := ch.QueueDeclare(
-		"task_q",
-		true,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return &q
-}
-
-func CreateResultQueue(ch *amqp.Channel) *amqp.Queue {
-	q, err := ch.QueueDeclare(
-		"result_q",
+		taskQueue,
 		true,
 		false,
 		false,

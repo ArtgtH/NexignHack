@@ -15,7 +15,7 @@ import (
 // @description Swagger API for Nexign ML project.
 
 // @BasePath /api/
-// @host localhost:3000
+// @host localhost:5050
 
 func InitRouter(taskService services.TaskService) *fiber.App {
 	router := fiber.New()
@@ -27,13 +27,13 @@ func InitRouter(taskService services.TaskService) *fiber.App {
 		AllowMethods: "GET, POST, PUT, DELETE, OPTIONS",
 	}))
 
-	binaryHandler := handlers.NewBinaryHandler(taskService)
+	baseHandler := handlers.NewBaseHandler(taskService)
 
 	router.Get("/swagger/*", swagger.HandlerDefault)
-	api := router.Group("/api")
+	api := router.Group("/ai")
 	{
-		api.Post("/binary/full/", binaryHandler.FullTask)
-		api.Post("/binary/short/", binaryHandler.ShortTask)
+		api.Post("/binary/full/", baseHandler.FullTask)
+		api.Post("/binary/short/", baseHandler.ShortTask)
 	}
 
 	return router

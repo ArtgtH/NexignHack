@@ -2,27 +2,33 @@ package services
 
 import (
 	"backend/src/router/structs"
+	"context"
 	"encoding/json"
+	"errors"
+	"github.com/go-redis/redis/v8"
+	"github.com/google/uuid"
 	"github.com/streadway/amqp"
 	"log"
+	"time"
 )
 
 type TaskService interface {
-	PublishTask(task *structs.CreatedTask) error
-	GetTaskResult(taskID uint) (string, error)
+	PublishTask(task *structs.CreatedFullTask) error
+	GetTaskResult(taskID uuid.UUID) (*structs.ResultTask, error)
 }
 
 type RabbitTaskService struct {
-	ch          *amqp.Channel
-	taskQueue   *amqp.Queue
-	resultQueue *amqp.Queue
+	ch        *amqp.Channel
+	taskQueue *amqp.Queue
+	rdb       *redis.Client
+	ctx       context.Context
 }
 
-func NewRabbitTaskService(ch *amqp.Channel, taskQueue *amqp.Queue, resultQueue *amqp.Queue) *RabbitTaskService {
-	return &RabbitTaskService{ch, taskQueue, resultQueue}
+func NewRabbitTaskService(ch *amqp.Channel, taskQueue *amqp.Queue, rdb *redis.Client, ctx context.Context) *RabbitTaskService {
+	return &RabbitTaskService{ch, taskQueue, rdb, ctx}
 }
 
-func (r *RabbitTaskService) PublishTask(task *structs.CreatedTask) error {
+func (r *RabbitTaskService) PublishTask(task *structs.CreatedFullTask) error {
 	body, err := json.Marshal(task)
 	if err != nil {
 		return err
@@ -44,10 +50,24 @@ func (r *RabbitTaskService) PublishTask(task *structs.CreatedTask) error {
 		return err
 	}
 
-	log.Printf("Сообщение отправлено в очередь: %s", body)
+	curr := time.Now()
+	log.Println(curr)
 	return nil
 }
 
-func (r *RabbitTaskService) GetTaskResult(taskID uint) (string, error) {
-	return "nil", nil
+func (r *RabbitTaskService) GetTaskResult(taskID uuid.UUID) (*structs.ResultTask, error) {
+	key := taskID.String()
+
+	for {
+		val, err := r.rdb.Get(r.ctx, key).Result()
+		if errors.Is(redis.Nil, err) {
+			continue
+		} else if err != nil {
+			log.Fatal(err)
+		} else {
+			var res structs.ResultTask
+			err = json.Unmarshal([]byte(val), &res)
+			return &res, nil
+		}
+	}
 }
