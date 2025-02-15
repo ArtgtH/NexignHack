@@ -3,8 +3,9 @@ package handlers
 import (
 	"backend/src/router/structs"
 	"backend/src/service/converter"
+	"backend/src/service/messages"
+	_ "backend/src/service/messages"
 	"backend/src/service/services"
-	structs2 "backend/src/service/structs"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"log"
@@ -90,7 +91,7 @@ func (h *BaseHandler) ShortTask(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).SendString("Error retrieving the task")
 	}
 
-	msg := []structs2.Message{
+	msg := []messages.Message{
 		{
 			UserID:      "1",
 			SubmitDate:  "1",

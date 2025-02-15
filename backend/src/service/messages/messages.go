@@ -1,4 +1,4 @@
-package structs
+package messages
 
 type Message struct {
 	UserID      string `json:"userID"`

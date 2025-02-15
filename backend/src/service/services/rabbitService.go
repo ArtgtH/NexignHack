@@ -17,18 +17,18 @@ type TaskService interface {
 	GetTaskResult(taskID uuid.UUID) (*structs.ResultTask, error)
 }
 
-type RabbitTaskService struct {
+type RabbitRedisTaskService struct {
 	ch        *amqp.Channel
 	taskQueue *amqp.Queue
 	rdb       *redis.Client
 	ctx       context.Context
 }
 
-func NewRabbitTaskService(ch *amqp.Channel, taskQueue *amqp.Queue, rdb *redis.Client, ctx context.Context) *RabbitTaskService {
-	return &RabbitTaskService{ch, taskQueue, rdb, ctx}
+func NewRabbitRedisTaskService(ch *amqp.Channel, taskQueue *amqp.Queue, rdb *redis.Client, ctx context.Context) *RabbitRedisTaskService {
+	return &RabbitRedisTaskService{ch, taskQueue, rdb, ctx}
 }
 
-func (r *RabbitTaskService) PublishTask(task *structs.CreatedFullTask) error {
+func (r *RabbitRedisTaskService) PublishTask(task *structs.CreatedFullTask) error {
 	body, err := json.Marshal(task)
 	if err != nil {
 		return err
@@ -55,7 +55,7 @@ func (r *RabbitTaskService) PublishTask(task *structs.CreatedFullTask) error {
 	return nil
 }
 
-func (r *RabbitTaskService) GetTaskResult(taskID uuid.UUID) (*structs.ResultTask, error) {
+func (r *RabbitRedisTaskService) GetTaskResult(taskID uuid.UUID) (*structs.ResultTask, error) {
 	key := taskID.String()
 
 	for {

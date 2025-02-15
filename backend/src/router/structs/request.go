@@ -1,7 +1,7 @@
 package structs
 
 import (
-	"backend/src/service/structs"
+	"backend/src/service/messages"
 	"github.com/google/uuid"
 )
 
@@ -10,15 +10,15 @@ type JSONTaskRequest struct {
 }
 
 type CreatedFullTask struct {
-	ID       uuid.UUID         `json:"id"`
-	Type     string            `json:"type"`
-	Messages []structs.Message `json:"messages"`
+	ID       uuid.UUID          `json:"id"`
+	Type     string             `json:"type"`
+	Messages []messages.Message `json:"messages"`
 }
 
 type ResultTask struct {
-	ID       uuid.UUID               `json:"id"`
-	Type     string                  `json:"type"`
-	Messages []structs.MessageResult `json:"messages"`
+	ID       uuid.UUID                `json:"id"`
+	Type     string                   `json:"type"`
+	Messages []messages.MessageResult `json:"messages"`
 }
 
 type TextTaskRequest struct {

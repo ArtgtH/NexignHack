@@ -19,9 +19,9 @@ func main() {
 	defer ch.Close()
 	defer conn.Close()
 
-	rabbitService := services.NewRabbitTaskService(ch, taskQ, rdb, ctx)
+	taskService := services.NewRabbitRedisTaskService(ch, taskQ, rdb, ctx)
 
-	app := router.InitRouter(rabbitService)
+	app := router.InitRouter(taskService)
 
 	log.Fatal(app.Listen(":5050"))
 }
