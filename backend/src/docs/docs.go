@@ -15,9 +15,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/fulltask": {
+        "/binary/full/": {
             "post": {
-                "description": "Uploads a file and processes it for a full task",
+                "description": "Uploads a file and processes it for a task",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -35,10 +35,10 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "File uploaded successfully",
+                    "201": {
+                        "description": "Created",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/structs.FileTaskResponse"
                         }
                     },
                     "400": {
@@ -56,30 +56,32 @@ const docTemplate = `{
                 }
             }
         },
-        "/shorttask": {
+        "/binary/short": {
             "post": {
-                "description": "Uploads a file and processes it for a short task",
+                "description": "Uploads a text and processes it for a task",
                 "consumes": [
-                    "multipart/form-data"
+                    "application/json"
                 ],
                 "produces": [
-                    "plain/text"
+                    "application/json"
                 ],
-                "summary": "Upload a file for a short task",
+                "summary": "Upload a text for a short task",
                 "parameters": [
                     {
-                        "type": "file",
-                        "description": "File to upload",
-                        "name": "file",
-                        "in": "formData",
-                        "required": true
+                        "description": "Text for a task",
+                        "name": "text",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/structs.TextTaskRequest"
+                        }
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "File uploaded successfully",
+                    "201": {
+                        "description": "Created",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/structs.TextTaskResponse"
                         }
                     },
                     "400": {
@@ -94,6 +96,61 @@ const docTemplate = `{
                             "type": "string"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "messages.MessageResult": {
+            "type": "object",
+            "properties": {
+                "messageText": {
+                    "type": "string"
+                },
+                "result": {
+                    "type": "integer"
+                },
+                "submitDate": {
+                    "type": "string"
+                },
+                "userID": {
+                    "type": "string"
+                }
+            }
+        },
+        "structs.FileTaskResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "messages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/messages.MessageResult"
+                    }
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "structs.TextTaskRequest": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "structs.TextTaskResponse": {
+            "type": "object",
+            "properties": {
+                "result": {
+                    "type": "integer"
+                },
+                "text": {
+                    "type": "string"
                 }
             }
         }

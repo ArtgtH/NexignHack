@@ -1,11 +1,46 @@
+definitions:
+  messages.MessageResult:
+    properties:
+      messageText:
+        type: string
+      result:
+        type: integer
+      submitDate:
+        type: string
+      userID:
+        type: string
+    type: object
+  structs.FileTaskResponse:
+    properties:
+      id:
+        type: string
+      messages:
+        items:
+          $ref: '#/definitions/messages.MessageResult'
+        type: array
+      type:
+        type: string
+    type: object
+  structs.TextTaskRequest:
+    properties:
+      text:
+        type: string
+    type: object
+  structs.TextTaskResponse:
+    properties:
+      result:
+        type: integer
+      text:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
-  /fulltask:
+  /binary/full/:
     post:
       consumes:
       - multipart/form-data
-      description: Uploads a file and processes it for a full task
+      description: Uploads a file and processes it for a task
       parameters:
       - description: File to upload
         in: formData
@@ -15,10 +50,10 @@ paths:
       produces:
       - plain/text
       responses:
-        "200":
-          description: File uploaded successfully
+        "201":
+          description: Created
           schema:
-            type: string
+            $ref: '#/definitions/structs.FileTaskResponse'
         "400":
           description: Error retrieving the file
           schema:
@@ -28,24 +63,25 @@ paths:
           schema:
             type: string
       summary: Upload a file for a full task
-  /shorttask:
+  /binary/short:
     post:
       consumes:
-      - multipart/form-data
-      description: Uploads a file and processes it for a short task
+      - application/json
+      description: Uploads a text and processes it for a task
       parameters:
-      - description: File to upload
-        in: formData
-        name: file
+      - description: Text for a task
+        in: body
+        name: text
         required: true
-        type: file
+        schema:
+          $ref: '#/definitions/structs.TextTaskRequest'
       produces:
-      - plain/text
+      - application/json
       responses:
-        "200":
-          description: File uploaded successfully
+        "201":
+          description: Created
           schema:
-            type: string
+            $ref: '#/definitions/structs.TextTaskResponse'
         "400":
           description: Error retrieving the file
           schema:
@@ -54,5 +90,5 @@ paths:
           description: Error opening or reading the file
           schema:
             type: string
-      summary: Upload a file for a short task
+      summary: Upload a text for a short task
 swagger: "2.0"

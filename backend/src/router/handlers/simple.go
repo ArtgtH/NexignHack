@@ -29,7 +29,7 @@ func NewBaseHandler(taskService services.TaskService) *BaseHandler {
 // @Accept multipart/form-data
 // @Produce plain/text
 // @Param file formData file true "File to upload"
-// @Success 201 {string} string "Task proceeded"
+// @Success 201 {object} structs.FileTaskResponse
 // @Failure 400 {string} string "Error retrieving the file"
 // @Failure 500 {string} string "Error opening or reading the file"
 // @Router /binary/full/ [post]
@@ -51,7 +51,7 @@ func (h *BaseHandler) FullTask(c *fiber.Ctx) error {
 
 	data, err := converter.ConvertFromXLSX(src)
 
-	task := structs.CreatedFullTask{
+	task := messages.CreatedFullTask{
 		ID:       uuid.New(),
 		Type:     "FullTask",
 		Messages: data,
@@ -81,7 +81,7 @@ func (h *BaseHandler) FullTask(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param text body structs.TextTaskRequest true "Text for a task"
-// @Success 201 {string} string "Task proceeded"
+// @Success 201 {object} structs.TextTaskResponse
 // @Failure 400 {string} string "Error retrieving the file"
 // @Failure 500 {string} string "Error opening or reading the file"
 // @Router /binary/short [post]
@@ -99,7 +99,7 @@ func (h *BaseHandler) ShortTask(c *fiber.Ctx) error {
 		},
 	}
 
-	task := structs.CreatedFullTask{
+	task := messages.CreatedFullTask{
 		ID:       uuid.New(),
 		Type:     "ShortTask",
 		Messages: msg,

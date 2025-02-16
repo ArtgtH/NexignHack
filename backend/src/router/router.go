@@ -13,8 +13,9 @@ import (
 // @title Songs Swagger API
 // @version 1.0
 // @description Swagger API for Nexign ML project.
+// @termsOfService http://swagger.io/terms/
 
-// @BasePath /api/
+// @BasePath /ai
 // @host localhost:5050
 
 func InitRouter(taskService services.TaskService) *fiber.App {

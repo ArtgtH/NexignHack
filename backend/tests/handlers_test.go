@@ -3,6 +3,7 @@ package tests
 import (
 	"backend/src/router"
 	"backend/src/router/structs"
+	"backend/src/service/messages"
 	"backend/tests/mocks"
 	"bytes"
 	"github.com/gofiber/fiber/v2"
@@ -20,11 +21,11 @@ func TestBaseHandler_FullTask(t *testing.T) {
 	router.InitRouter(mockService)
 
 	t.Run("Success", func(t *testing.T) {
-		expectedTask := &structs.CreatedFullTask{
+		expectedTask := &messages.CreatedFullTask{
 			ID:   uuid.New(),
 			Type: "FullTask",
 		}
-		expectedResult := &structs.ResultTask{
+		expectedResult := &structs.FileTaskResponse{
 			ID: expectedTask.ID,
 		}
 
@@ -40,7 +41,6 @@ func TestBaseHandler_FullTask(t *testing.T) {
 		req := httptest.NewRequest("POST", "/binary/full/", body)
 		req.Header.Set("Content-Type", writer.FormDataContentType())
 
-		// Execute
 		resp, _ := app.Test(req)
 		assert.Equal(t, fiber.StatusCreated, resp.StatusCode)
 	})

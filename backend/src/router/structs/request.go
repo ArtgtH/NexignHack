@@ -5,17 +5,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type JSONTaskRequest struct {
-	Data interface{} `json:"data" required:"true"`
-}
-
-type CreatedFullTask struct {
-	ID       uuid.UUID          `json:"id"`
-	Type     string             `json:"type"`
-	Messages []messages.Message `json:"messages"`
-}
-
-type ResultTask struct {
+type FileTaskResponse struct {
 	ID       uuid.UUID                `json:"id"`
 	Type     string                   `json:"type"`
 	Messages []messages.MessageResult `json:"messages"`

@@ -2,6 +2,7 @@ package services
 
 import (
 	"backend/src/router/structs"
+	"backend/src/service/messages"
 	"context"
 	"encoding/json"
 	"errors"
@@ -13,8 +14,8 @@ import (
 )
 
 type TaskService interface {
-	PublishTask(task *structs.CreatedFullTask) error
-	GetTaskResult(taskID uuid.UUID) (*structs.ResultTask, error)
+	PublishTask(task *messages.CreatedFullTask) error
+	GetTaskResult(taskID uuid.UUID) (*structs.FileTaskResponse, error)
 }
 
 type RabbitRedisTaskService struct {
@@ -28,7 +29,7 @@ func NewRabbitRedisTaskService(ch *amqp.Channel, taskQueue *amqp.Queue, rdb *red
 	return &RabbitRedisTaskService{ch, taskQueue, rdb, ctx}
 }
 
-func (r *RabbitRedisTaskService) PublishTask(task *structs.CreatedFullTask) error {
+func (r *RabbitRedisTaskService) PublishTask(task *messages.CreatedFullTask) error {
 	body, err := json.Marshal(task)
 	if err != nil {
 		return err
@@ -55,7 +56,7 @@ func (r *RabbitRedisTaskService) PublishTask(task *structs.CreatedFullTask) erro
 	return nil
 }
 
-func (r *RabbitRedisTaskService) GetTaskResult(taskID uuid.UUID) (*structs.ResultTask, error) {
+func (r *RabbitRedisTaskService) GetTaskResult(taskID uuid.UUID) (*structs.FileTaskResponse, error) {
 	key := taskID.String()
 
 	for {
@@ -65,7 +66,7 @@ func (r *RabbitRedisTaskService) GetTaskResult(taskID uuid.UUID) (*structs.Resul
 		} else if err != nil {
 			log.Fatal(err)
 		} else {
-			var res structs.ResultTask
+			var res structs.FileTaskResponse
 			err = json.Unmarshal([]byte(val), &res)
 			return &res, nil
 		}

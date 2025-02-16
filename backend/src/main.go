@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "backend/src/docs"
 	"backend/src/mq"
 	"backend/src/router"
 	"backend/src/service/services"
