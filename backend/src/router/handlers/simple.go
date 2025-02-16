@@ -40,7 +40,7 @@ func (h *BaseHandler) FullTask(c *fiber.Ctx) error {
 
 	file, err := c.FormFile("file")
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).SendString("Error retrieving the file")
+		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
 
 	src, err := file.Open()
