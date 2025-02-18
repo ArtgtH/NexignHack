@@ -35,7 +35,7 @@ func ConvertFromXLSX(file multipart.File) ([]messages.Message, error) {
 		return nil, fmt.Errorf("error reading the Excel file: %v", err)
 	}
 
-	pattern, _ := regexp.Compile(`<[^>]*>`)
+	pattern, _ := regexp.Compile(`<[^>]*>|&nbsp;`)
 	result := make([]messages.Message, len(rows)-1)
 	for idx, row := range rows[1:] {
 		if row[0] != "" {
