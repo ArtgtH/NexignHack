@@ -32,7 +32,7 @@ func NewBaseHandler(taskService services.TaskService) *BaseHandler {
 // @Success 201 {object} structs.FileTaskResponse
 // @Failure 400 {string} string "Error retrieving the file"
 // @Failure 500 {string} string "Error opening or reading the file"
-// @Router /binary/full/ [post]
+// @Router /ai/binary/full/ [post]
 func (h *BaseHandler) FullTask(c *fiber.Ctx) error {
 
 	curr := time.Now()
@@ -84,7 +84,7 @@ func (h *BaseHandler) FullTask(c *fiber.Ctx) error {
 // @Success 201 {object} structs.TextTaskResponse
 // @Failure 400 {string} string "Error retrieving the file"
 // @Failure 500 {string} string "Error opening or reading the file"
-// @Router /binary/short [post]
+// @Router /ai/binary/short [post]
 func (h *BaseHandler) ShortTask(c *fiber.Ctx) error {
 	var text structs.TextTaskRequest
 	if err := c.BodyParser(&text); err != nil {

@@ -36,7 +36,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /binary/full/:
+  /ai/binary/full/:
     post:
       consumes:
       - multipart/form-data
@@ -63,7 +63,7 @@ paths:
           schema:
             type: string
       summary: Upload a file for a full task
-  /binary/short:
+  /ai/binary/short:
     post:
       consumes:
       - application/json

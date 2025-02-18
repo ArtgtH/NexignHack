@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/binary/full/": {
+        "/ai/binary/full/": {
             "post": {
                 "description": "Uploads a file and processes it for a task",
                 "consumes": [
@@ -56,7 +56,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/binary/short": {
+        "/ai/binary/short": {
             "post": {
                 "description": "Uploads a text and processes it for a task",
                 "consumes": [

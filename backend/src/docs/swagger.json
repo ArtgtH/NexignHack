@@ -4,7 +4,7 @@
         "contact": {}
     },
     "paths": {
-        "/binary/full/": {
+        "/ai/binary/full/": {
             "post": {
                 "description": "Uploads a file and processes it for a task",
                 "consumes": [
@@ -45,7 +45,7 @@
                 }
             }
         },
-        "/binary/short": {
+        "/ai/binary/short": {
             "post": {
                 "description": "Uploads a text and processes it for a task",
                 "consumes": [
