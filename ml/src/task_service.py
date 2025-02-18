@@ -15,7 +15,7 @@ class TaskService:
         self._task_queue = task_in
         self._redis = redis
         self._predictor = ONNXClassifier(
-            onnx_path="model (3).onnx", tokenizer_name="sergeyzh/rubert-tiny-turbo"
+            onnx_path="model(3).onnx", tokenizer_name="sergeyzh/rubert-tiny-turbo"
         )
 
         self._channel_in.queue_declare(queue=self._task_queue, passive=True)
